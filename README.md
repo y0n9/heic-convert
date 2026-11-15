@@ -25,15 +25,15 @@ The entire conversion runs locally in the browser — no backend, no upload endp
 
 ## Tech Stack
 
-| Category | Choice |
-| --- | --- |
-| Framework | React 19 + TypeScript 5.9 |
-| Build | Vite 7 (`base: '/'`), ESLint 9 |
-| Styling | Tailwind CSS 3 + hand-written CSS (`src/App.css`, `src/index.css`) |
-| Routing | react-router-dom 7 (`BrowserRouter`) |
-| Icons | lucide-react |
-| HEIC decode | heic2any 0.0.4 (dynamically imported on demand) |
-| ZIP | jszip 3 (dynamically imported on demand) |
+| Category    | Choice                                                             |
+| ----------- | ------------------------------------------------------------------ |
+| Framework   | React 19 + TypeScript 5.9                                          |
+| Build       | Vite 7 (`base: '/'`), ESLint 9                                     |
+| Styling     | Tailwind CSS 3 + hand-written CSS (`src/App.css`, `src/index.css`) |
+| Routing     | react-router-dom 7 (`BrowserRouter`)                               |
+| Icons       | lucide-react                                                       |
+| HEIC decode | heic2any 0.0.4 (dynamically imported on demand)                    |
+| ZIP         | jszip 3 (dynamically imported on demand)                           |
 
 The project was initialized from the modern-web-app template, so `package.json` still carries a batch of template-bundled shadcn/ui and Radix UI dependencies; only the few items in the table above are required at runtime.
 
@@ -74,15 +74,15 @@ npm run preview       # preview the production build locally
 
 ## Pages & Routes
 
-| Path | Content | Default format |
-| --- | --- | --- |
-| `/` | HEIC to JPG converter (home) | JPG |
-| `/heic-to-png` | HEIC to PNG converter | PNG |
-| `/heic-to-webp` | HEIC to WebP converter | WebP |
-| `/iphone-heic-to-jpg` | iPhone HEIC settings & conversion guide | — |
-| `/heic-vs-jpg` | HEIC vs JPG comparison | — |
-| `/how-to-open-heic-on-windows` | Open HEIC on Windows | — |
-| `/how-to-convert-heic-on-mac` | Convert HEIC on Mac (browser / Preview / Finder Quick Actions) | — |
+| Path                           | Content                                                        | Default format |
+| ------------------------------ | -------------------------------------------------------------- | -------------- |
+| `/`                            | HEIC to JPG converter (home)                                   | JPG            |
+| `/heic-to-png`                 | HEIC to PNG converter                                          | PNG            |
+| `/heic-to-webp`                | HEIC to WebP converter                                         | WebP           |
+| `/iphone-heic-to-jpg`          | iPhone HEIC settings & conversion guide                        | —              |
+| `/heic-vs-jpg`                 | HEIC vs JPG comparison                                         | —              |
+| `/how-to-open-heic-on-windows` | Open HEIC on Windows                                           | —              |
+| `/how-to-convert-heic-on-mac`  | Convert HEIC on Mac (browser / Preview / Finder Quick Actions) | —              |
 
 Unmatched paths redirect to the home page.
 
@@ -113,28 +113,3 @@ If deploying to **GitHub Pages**, `_redirects` will not take effect: you need to
 - `npm run lint` and `npm run build` pass.
 - End-to-end tested with the heic2any official demo sample `1.heic` (41,389 bytes, container header `ftypmif1`): JPG output has a standard JPEG/JFIF header, PNG output `89504e47`, WebP output `RIFF....WEBP`; dimensions 1440×960; single download and ZIP contents/names are correct; the two-file batch WebP ZIP passes.
 - Format-switch re-conversion, PNG hiding the quality slider, and invalid-HEIC failure prompts with retry all pass; the conversion flow makes no external fetch / XHR, and page styles load no external fonts or scripts.
-- No horizontal overflow at 1440px desktop and 390px mobile. Test samples and screenshots live in `.workbuddy/` and are not included in the repository.
-
-## Known Limitations
-
-- Output is limited to JPG / PNG / WebP; full EXIF / metadata preservation is not promised — keep the original HEIC if you need the original metadata.
-- There is no hard file-count limit, but conversion runs sequentially in the browser, so batch size is constrained by device memory; only a warning is shown above 50 MB.
-- WebP output depends on the browser's canvas encoding capability; older browsers get a clear error rather than silently producing a wrong format.
-- Multi-image containers are split and exported by number, but iPhone real-world multi-image HEIC / Live Photo variants have not been covered by testing.
-
-## Before Pushing to GitHub / Repository Status
-
-- A git repository has been initialized (default branch `main`).
-- A `.gitignore` has been added, excluding `node_modules/`, `dist/`, `.history/`, `.workbuddy/` (test samples, screenshots, working notes), `.env*`, and local logs.
-- Per the project owner's decision, `PRD_HEIC_to_JPG_2026-11-08.md` (product and SEO internal strategy) is **excluded from the repository** and added to `.gitignore`.
-- `package.json` has `private: true`; the project is a site, not an npm package.
-- `LICENSE` is **not yet added**: add a `LICENSE` file per your publishing strategy before going public and update this section.
-- Languages: this file is the English version (the default README); the Chinese version is at [README_ZH.md](./README_ZH.md).
-
-## Related Documentation
-
-- `README_ZH.md`: Chinese project documentation (same content).
-
-## License
-
-Not specified yet. Add a `LICENSE` file per your publishing strategy before public release and update this section.
