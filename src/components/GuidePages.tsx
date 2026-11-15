@@ -19,6 +19,31 @@ import { formatDisplayName } from "../lib/formats";
 import type { OutputFormat } from "../lib/formats";
 import Seo from "./Seo";
 import FaqList from "./FaqList";
+import type { FaqItem } from "./FaqList";
+import { absoluteUrl, article, breadcrumbs, faqPage, graph } from "../lib/seo";
+
+/** Build Article + BreadcrumbList + FAQPage structured data for an editorial guide. */
+function guideStructuredData({
+  title,
+  description,
+  path,
+  faqs,
+}: {
+  title: string;
+  description: string;
+  path: string;
+  faqs: FaqItem[];
+}) {
+  const url = absoluteUrl(path);
+  return graph(
+    article({ headline: title, description, url }),
+    breadcrumbs([
+      { name: "Home", path: "/" },
+      { name: title, path },
+    ]),
+    faqPage(faqs),
+  );
+}
 
 interface GuideLayoutProps {
   eyebrow: string;
@@ -91,10 +116,28 @@ export function RelatedReading({ exclude, limit = 3 }: { exclude: string; limit?
   );
 }
 
+const iphoneFaqs: FaqItem[] = [
+  { question: "Will changing Camera Formats convert my old photos?", answer: "No. The Most Compatible setting only affects photos you take after changing it. Use the converter for HEIC photos already in your library." },
+  { question: "Does converting to JPG delete the original?", answer: "No. The converter creates a new JPG copy in your browser. Your original HEIC file remains untouched on your device." },
+  { question: "Can I convert directly on my iPhone?", answer: "Yes. This tool works in a modern mobile browser. Available memory varies by device, so smaller batches are sensible for very large photo libraries." },
+];
+
+const iphoneMeta = {
+  title: "iPhone HEIC to JPG — Convert Photos | heicconvert",
+  description: "Learn why your iPhone uses HEIC, how to save new photos as JPG, and how to convert existing HEIC photos privately in your browser.",
+  path: "/iphone-heic-to-jpg",
+};
+
 export function IphoneGuide() {
   return (
     <>
-      <Seo title="iPhone HEIC to JPG — Convert Photos" description="Learn why your iPhone uses HEIC, how to save new photos as JPG, and how to convert existing HEIC photos privately in your browser." />
+      <Seo
+        title={iphoneMeta.title}
+        description={iphoneMeta.description}
+        path={iphoneMeta.path}
+        type="article"
+        jsonLd={guideStructuredData({ title: "iPhone HEIC to JPG", description: iphoneMeta.description, path: iphoneMeta.path, faqs: iphoneFaqs })}
+      />
       <GuideLayout eyebrow="IPHONE PHOTO GUIDE" title="iPhone HEIC to JPG" intro="Your iPhone photos work beautifully on Apple devices. Here’s how to make them just as easy to use on Windows, websites, and in documents." current="iPhone HEIC to JPG">
         <section id="why-heic">
           <span className="article-number">01</span>
@@ -125,20 +168,34 @@ export function IphoneGuide() {
         </section>
         <GuideCta />
       </GuideLayout>
-      <FaqList title="iPhone photo questions" items={[
-        { question: "Will changing Camera Formats convert my old photos?", answer: "No. The Most Compatible setting only affects photos you take after changing it. Use the converter for HEIC photos already in your library." },
-        { question: "Does converting to JPG delete the original?", answer: "No. The converter creates a new JPG copy in your browser. Your original HEIC file remains untouched on your device." },
-        { question: "Can I convert directly on my iPhone?", answer: "Yes. This tool works in a modern mobile browser. Available memory varies by device, so smaller batches are sensible for very large photo libraries." },
-      ]} />
+      <FaqList title="iPhone photo questions" items={iphoneFaqs} />
       <RelatedReading exclude="/iphone-heic-to-jpg" />
     </>
   );
 }
 
+const comparisonFaqs: FaqItem[] = [
+  { question: "Is HEIC better quality than JPG?", answer: "Not automatically. HEIC can deliver similar visual quality at a smaller file size, but the original capture and compression settings matter for both formats." },
+  { question: "Does converting HEIC to JPG improve compatibility?", answer: "Yes. JPG is supported by most operating systems, browsers, editing tools, and upload forms, which makes it a reliable choice for sharing." },
+  { question: "Will JPG make my photo smaller?", answer: "Not necessarily. A converted JPG can be larger than the original HEIC because HEIC generally compresses photographic images more efficiently." },
+];
+
+const comparisonMeta = {
+  title: "HEIC vs JPG — What's the Difference? | heicconvert",
+  description: "Compare HEIC and JPG file size, image quality, compatibility, and everyday uses, then convert HEIC photos to JPG, PNG, or WebP locally.",
+  path: "/heic-vs-jpg",
+};
+
 export function ComparisonGuide() {
   return (
     <>
-      <Seo title="HEIC vs JPG — What's the Difference?" description="Compare HEIC and JPG file size, image quality, compatibility, and everyday uses, then convert HEIC photos to JPG, PNG, or WebP locally." />
+      <Seo
+        title={comparisonMeta.title}
+        description={comparisonMeta.description}
+        path={comparisonMeta.path}
+        type="article"
+        jsonLd={guideStructuredData({ title: "HEIC vs JPG", description: comparisonMeta.description, path: comparisonMeta.path, faqs: comparisonFaqs })}
+      />
       <GuideLayout eyebrow="FORMAT FIELD GUIDE" title="HEIC vs JPG" intro="Both formats can hold a beautiful photo. The real difference is how they balance storage, compatibility, and the way you want to use it." current="HEIC vs JPG">
         <section id="quick-comparison">
           <span className="article-number">01</span>
@@ -172,20 +229,34 @@ export function ComparisonGuide() {
         </section>
         <GuideCta />
       </GuideLayout>
-      <FaqList title="HEIC and JPG questions" items={[
-        { question: "Is HEIC better quality than JPG?", answer: "Not automatically. HEIC can deliver similar visual quality at a smaller file size, but the original capture and compression settings matter for both formats." },
-        { question: "Does converting HEIC to JPG improve compatibility?", answer: "Yes. JPG is supported by most operating systems, browsers, editing tools, and upload forms, which makes it a reliable choice for sharing." },
-        { question: "Will JPG make my photo smaller?", answer: "Not necessarily. A converted JPG can be larger than the original HEIC because HEIC generally compresses photographic images more efficiently." },
-      ]} />
+      <FaqList title="HEIC and JPG questions" items={comparisonFaqs} />
       <RelatedReading exclude="/heic-vs-jpg" />
     </>
   );
 }
 
+const windowsFaqs: FaqItem[] = [
+  { question: "Why can my iPhone open HEIC but Windows cannot?", answer: "Apple includes HEIC support in its operating systems. Windows support depends on the installed HEIF and, in some cases, HEVC codecs." },
+  { question: "Do I always need to install a Windows extension?", answer: "No. Some PCs already have the required support. And if you only need a compatible copy, you can use this browser-based converter instead." },
+  { question: "Is it safe to convert HEIC photos in a browser?", answer: "This tool processes files locally in your browser rather than sending them to a conversion server. Closing the tab clears the current workspace." },
+];
+
+const windowsMeta = {
+  title: "How to Open HEIC on Windows — Free Guide | heicconvert",
+  description: "Open iPhone HEIC photos on Windows with HEIF support, or convert them to JPG, PNG, or WebP locally without uploading your photos.",
+  path: "/how-to-open-heic-on-windows",
+};
+
 export function WindowsGuide() {
   return (
     <>
-      <Seo title="How to Open HEIC on Windows" description="Open iPhone HEIC photos on Windows with HEIF support, or convert them to JPG, PNG, or WebP locally without uploading your photos." />
+      <Seo
+        title={windowsMeta.title}
+        description={windowsMeta.description}
+        path={windowsMeta.path}
+        type="article"
+        jsonLd={guideStructuredData({ title: "How to Open HEIC on Windows", description: windowsMeta.description, path: windowsMeta.path, faqs: windowsFaqs })}
+      />
       <GuideLayout eyebrow="WINDOWS PHOTO GUIDE" title="How to Open HEIC on Windows" intro="An iPhone photo should not become a dead end on your PC. Try Windows’ built-in support first, or make a compatible copy in a few clicks." current="Open HEIC on Windows">
         <section id="photos-app">
           <span className="article-number">01</span>
@@ -211,20 +282,35 @@ export function WindowsGuide() {
         </section>
         <GuideCta />
       </GuideLayout>
-      <FaqList title="Windows HEIC questions" items={[
-        { question: "Why can my iPhone open HEIC but Windows cannot?", answer: "Apple includes HEIC support in its operating systems. Windows support depends on the installed HEIF and, in some cases, HEVC codecs." },
-        { question: "Do I always need to install a Windows extension?", answer: "No. Some PCs already have the required support. And if you only need a compatible copy, you can use this browser-based converter instead." },
-        { question: "Is it safe to convert HEIC photos in a browser?", answer: "This tool processes files locally in your browser rather than sending them to a conversion server. Closing the tab clears the current workspace." },
-      ]} />
+      <FaqList title="Windows HEIC questions" items={windowsFaqs} />
       <RelatedReading exclude="/how-to-open-heic-on-windows" />
     </>
   );
 }
 
+const macFaqs: FaqItem[] = [
+  { question: "Can Mac open HEIC files?", answer: "Yes. Preview, Photos, and Finder can display HEIC files natively on current versions of macOS. Conversion is mainly needed for sharing, web use, or compatibility with other software." },
+  { question: "How do I batch convert HEIC photos on Mac?", answer: "Use Finder Quick Actions on macOS Monterey or later, or drag a whole batch into the browser converter and download the results as a ZIP." },
+  { question: "Does converting to PNG lose quality?", answer: "PNG output is lossless from the decoded image. JPG and WebP use adjustable compression, so keep the original HEIC as your archival copy." },
+  { question: "Do I need to install software on my Mac?", answer: "No. Preview and Finder are built into macOS, and the heicconvert converter works entirely in a modern browser." },
+];
+
+const macMeta = {
+  title: "How to Convert HEIC on Mac — Free Guide | heicconvert",
+  description: "Convert HEIC photos on Mac with a private browser converter, Preview, or Finder Quick Actions. Includes batch steps and format advice.",
+  path: "/how-to-convert-heic-on-mac",
+};
+
 export function MacGuide() {
   return (
     <>
-      <Seo title="How to Convert HEIC on Mac" description="Convert HEIC photos on Mac with a private browser converter, Preview, or Finder Quick Actions. Includes batch steps and format advice." />
+      <Seo
+        title={macMeta.title}
+        description={macMeta.description}
+        path={macMeta.path}
+        type="article"
+        jsonLd={guideStructuredData({ title: "How to Convert HEIC on Mac", description: macMeta.description, path: macMeta.path, faqs: macFaqs })}
+      />
       <GuideLayout eyebrow="MAC PHOTO GUIDE" title="How to Convert HEIC on Mac" intro="macOS opens HEIC photos natively. When you need to share with another platform or prepare images for the web, these three methods cover everything from one photo to a full batch." current="Convert HEIC on Mac">
         <section id="browser-method">
           <span className="article-number">01</span>
@@ -276,12 +362,7 @@ export function MacGuide() {
         </section>
         <GuideCta />
       </GuideLayout>
-      <FaqList title="Mac HEIC questions" items={[
-        { question: "Can Mac open HEIC files?", answer: "Yes. Preview, Photos, and Finder can display HEIC files natively on current versions of macOS. Conversion is mainly needed for sharing, web use, or compatibility with other software." },
-        { question: "How do I batch convert HEIC photos on Mac?", answer: "Use Finder Quick Actions on macOS Monterey or later, or drag a whole batch into the browser converter and download the results as a ZIP." },
-        { question: "Does converting to PNG lose quality?", answer: "PNG output is lossless from the decoded image. JPG and WebP use adjustable compression, so keep the original HEIC as your archival copy." },
-        { question: "Do I need to install software on my Mac?", answer: "No. Preview and Finder are built into macOS, and the heicconvert converter works entirely in a modern browser." },
-      ]} />
+      <FaqList title="Mac HEIC questions" items={macFaqs} />
       <RelatedReading exclude="/how-to-convert-heic-on-mac" />
     </>
   );

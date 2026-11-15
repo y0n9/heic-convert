@@ -19,7 +19,7 @@ The entire conversion runs locally in the browser — no backend, no upload endp
 - **Download**: download one by one, or package with JSZip as `heic-to-<format>-photos.zip`, with automatic handling of duplicate names.
 - **Result info**: preview image, output dimensions, output size, and output file name.
 - **Resilience**: batch format validation, per-file failure reasons with retry, remove single / clear list, and a warning (not a hard rejection) when a file exceeds 50 MB about device-memory risk.
-- **Privacy**: photos are not uploaded and no watermark is injected; closing the tab clears the current workspace.
+- **Privacy**: photos are never uploaded and no watermark is injected; closing the tab clears the current workspace. Image conversion is 100% local. The page does load Google Tag Manager (GTM-WR382QHR) for anonymous usage analytics, so the site makes outbound requests to Google — but no photo or file data is ever included in those requests.
 - **SEO content pages**: four guides — iPhone settings, HEIC vs JPG, opening on Windows, converting on Mac — with route-level title / description.
 - **Responsive**: one light-cream / deep-green visual system for both desktop and mobile.
 
@@ -112,4 +112,4 @@ If deploying to **GitHub Pages**, `_redirects` will not take effect: you need to
 
 - `npm run lint` and `npm run build` pass.
 - End-to-end tested with the heic2any official demo sample `1.heic` (41,389 bytes, container header `ftypmif1`): JPG output has a standard JPEG/JFIF header, PNG output `89504e47`, WebP output `RIFF....WEBP`; dimensions 1440×960; single download and ZIP contents/names are correct; the two-file batch WebP ZIP passes.
-- Format-switch re-conversion, PNG hiding the quality slider, and invalid-HEIC failure prompts with retry all pass; the conversion flow makes no external fetch / XHR, and page styles load no external fonts or scripts.
+- Format-switch re-conversion, PNG hiding the quality slider, and invalid-HEIC failure prompts with retry all pass; the conversion flow makes no external fetch / XHR and uploads no photos. Note: the page now loads Google Tag Manager for analytics, so the browser makes outbound requests to Google (analytics only — no image data).

@@ -19,6 +19,7 @@ import type { OutputFormat } from "./lib/formats";
 import SiteLayout from "./components/SiteLayout";
 import Seo from "./components/Seo";
 import FaqList from "./components/FaqList";
+import { absoluteUrl, breadcrumbs, faqPage, graph, webApplication } from "./lib/seo";
 import { ComparisonGuide, IphoneGuide, MacGuide, RelatedReading, WindowsGuide } from "./components/GuidePages";
 
 function ScrollManager() {
@@ -103,30 +104,58 @@ const webpFaqs = [
   { question: "Are WebP conversions private?", answer: "Yes. Like JPG and PNG, WebP conversion happens locally in your browser. Your HEIC photos are never sent to a conversion server." },
 ];
 
-const toolPageMeta: Record<OutputFormat, { title: string; description: string; faqTitle: string }> = {
+const toolPageMeta: Record<OutputFormat, { title: string; description: string; faqTitle: string; path: string }> = {
   jpg: {
-    title: "HEIC to JPG — Free, Batch, No Upload",
+    title: "HEIC to JPG Converter — Free, Batch, No Upload | heicconvert",
     description: "Convert HEIC to JPG, PNG, or WebP locally in your browser. Batch conversion, quality control, ZIP downloads, no upload, and no sign-up.",
     faqTitle: "Questions, answered.",
+    path: "/",
   },
   png: {
-    title: "HEIC to PNG — Free Online Converter",
+    title: "HEIC to PNG Converter — Free Online | heicconvert",
     description: "Convert HEIC to PNG locally in your browser. Batch conversion, ZIP download, no upload, no registration, and no watermark.",
     faqTitle: "About PNG conversion",
+    path: "/heic-to-png",
   },
   webp: {
-    title: "HEIC to WebP — Free Online Converter",
+    title: "HEIC to WebP Converter — Free Online | heicconvert",
     description: "Convert HEIC to WebP locally in your browser with adjustable quality, batch conversion, ZIP download, and no upload.",
     faqTitle: "About WebP conversion",
+    path: "/heic-to-webp",
   },
 };
 
 function ToolPage({ format }: { format: OutputFormat }) {
   const meta = toolPageMeta[format];
   const faqs = format === "png" ? pngFaqs : format === "webp" ? webpFaqs : homeFaqs;
+  const structuredData = graph(
+    webApplication({
+      name: `heicconvert — HEIC to ${formatDisplayName(format)}`,
+      description: meta.description,
+      url: absoluteUrl(meta.path),
+      featureList: [
+        "HEIC / HEIF to JPG, PNG, and WebP conversion",
+        "Batch conversion with overall progress",
+        "Adjustable quality for JPG and WebP",
+        "ZIP download for converted batches",
+        "Runs locally in the browser with no photo upload",
+        "No sign-up and no watermark",
+      ],
+    }),
+    breadcrumbs([
+      { name: "Home", path: "/" },
+      ...(meta.path === "/" ? [] : [{ name: `HEIC to ${formatDisplayName(format)}`, path: meta.path }]),
+    ]),
+    faqPage(faqs),
+  );
   return (
     <>
-      <Seo title={meta.title} description={meta.description} />
+      <Seo
+        title={meta.title}
+        description={meta.description}
+        path={meta.path}
+        jsonLd={structuredData}
+      />
       <section className="tool-hero">
         <div className="hero-decoration hero-decoration-left" aria-hidden="true" />
         <div className="hero-decoration hero-decoration-right" aria-hidden="true" />
