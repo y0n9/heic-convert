@@ -112,3 +112,5 @@ Node version:       22
 - `npm run lint`、`npm run build` 通过。
 - 使用 heic2any 官方 demo 样张 `1.heic`（41,389 字节，容器头 `ftypmif1`）完成端到端实测：JPG 输出标准 JPEG/JFIF 头、PNG 输出 `89504e47`、WebP 输出 `RIFF....WEBP`；尺寸 1440×960；单张下载与 ZIP 文件内容名正确；双文件批量 WebP 的 ZIP 通过。
 - 格式切换后重新转换、PNG 隐藏质量滑块、无效 HEIC 的失败提示与重试均通过；转换流程无外部 fetch / XHR，页面样式不加载外部字体或脚本。
+
+ 
